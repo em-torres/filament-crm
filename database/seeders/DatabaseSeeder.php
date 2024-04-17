@@ -2,6 +2,11 @@
 
 namespace Database\Seeders;
 
+use App\Models\Address;
+use App\Models\City;
+use App\Models\Client;
+use App\Models\Country;
+use App\Models\Meeting;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -15,9 +20,32 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+//        User::factory()->create([
+//            'name' => 'Test User',
+//            'email' => 'test@example.com',
+//        ]);
+
+        $clients = Client::factory(100)->create();
+        $countries = Country::factory(5)->create();
+
+        $cities = City::factory(20)
+            ->recycle($countries)
+            ->state([
+                'country_id' => Country::factory()
+            ])
+            ->create();
+
+        Address::factory(200)
+            ->recycle([$clients, $cities])
+            ->state([
+                'client_id' => Client::factory(),
+                'city_id' => City::factory()
+            ])
+            ->create();
+
+        Meeting::factory(20)
+            ->recycle($clients)
+            ->state(['client_id' => Client::factory()])
+            ->create();
     }
 }
