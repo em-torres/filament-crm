@@ -23,34 +23,65 @@ class ClientResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('first_name')
-                    ->required(),
-                Forms\Components\TextInput::make('last_name')
-                    ->required(),
-                Forms\Components\TextInput::make('email')
-                    ->email()
-                    ->required(),
-                Forms\Components\TextInput::make('phone')
-                    ->tel(),
-                Forms\Components\TextInput::make('mobile'),
-                Forms\Components\TextInput::make('title'),
-                Forms\Components\TextInput::make('company'),
-                Forms\Components\TextInput::make('role'),
-                Forms\Components\Textarea::make('linkedin')
-                    ->columnSpanFull(),
-                Forms\Components\TextInput::make('company_website'),
-                Forms\Components\Textarea::make('business_details')
-                    ->columnSpanFull(),
-                Forms\Components\TextInput::make('business_type'),
-                Forms\Components\TextInput::make('company_size'),
-                Forms\Components\TextInput::make('temperature'),
-                Forms\Components\Textarea::make('referrals')
-                    ->columnSpanFull(),
-                Forms\Components\TextInput::make('photo'),
-                Forms\Components\Textarea::make('notes')
-                    ->columnSpanFull(),
-                Forms\Components\Toggle::make('active')
-                    ->required(),
+                Forms\Components\Grid::make([
+                    'md' => 3,
+                ])->schema([
+                    Forms\Components\Section::make()->schema([
+                        Forms\Components\Section::make(__('Personal Info'))->schema([
+                            Forms\Components\FileUpload::make('photo')
+                                ->image(),
+                            Forms\Components\TextInput::make('first_name')
+                                ->string()
+                                ->minLength(2)
+                                ->maxLength(255)
+                                ->required(),
+                            Forms\Components\TextInput::make('last_name')
+                                ->string()
+                                ->minLength(2)
+                                ->maxLength(255)
+                                ->required(),
+                            Forms\Components\TextInput::make('email')
+                                ->email()
+                                ->required(),
+                            Forms\Components\TextInput::make('phone')
+                                ->tel(),
+                            Forms\Components\TextInput::make('mobile'),
+                            Forms\Components\TextInput::make('linkedin')
+                                ->columnSpanFull(),
+                            Forms\Components\Toggle::make('active')
+                                ->required(),
+                        ]),
+                        Forms\Components\Section::make(__('Business Info'))->schema([
+                            Forms\Components\TextInput::make('title'),
+                            Forms\Components\TextInput::make('company'),
+                            Forms\Components\TextInput::make('role'),
+                            Forms\Components\TextInput::make('company_website'),
+                            Forms\Components\Textarea::make('business_details')
+                                ->columnSpanFull(),
+                            Forms\Components\TextInput::make('business_type'),
+                            Forms\Components\Select::make('company_size')
+                                ->options([
+                                    'small' => __('small'),
+                                    'mid' => __('medium'),
+                                    'big' => __('large'),
+                                ]),
+                            Forms\Components\Select::make(__('temperature'))
+                                ->options([
+                                    'cold' => __('cold'),
+                                    'warm' => __('warm'),
+                                    'hot' => __('hot'),
+                                ]),
+                        ]),
+                    ])->columnSpan(2),
+
+                    Forms\Components\Section::make(__('Notes'))->schema([
+                        Forms\Components\Textarea::make('notes')
+                            ->columnSpanFull(),
+                        Forms\Components\Textarea::make('referrals')
+                            ->columnSpanFull(),
+                    ])->columnSpan(1),
+                ]),
+
             ]);
     }
 
