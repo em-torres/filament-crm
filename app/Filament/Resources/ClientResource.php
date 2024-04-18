@@ -159,61 +159,68 @@ class ClientResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\Layout\Split::make([
-                    Tables\Columns\ImageColumn::make('photo')
-                        ->circular(),
-                    Tables\Columns\TextColumn::make('first_name')
-                        ->label(__('Name'))
-                        ->formatStateUsing(fn($record): string => "{$record->first_name} {$record->last_name}")
-                        ->searchable(['first_name', 'last_name']),
-                    Tables\Columns\TextColumn::make('email')
-                        ->visibleFrom('md')
-                        ->searchable(),
-                    Tables\Columns\TextColumn::make('phone')
-                        ->toggleable()
-                        ->searchable(),
-                    Tables\Columns\TextColumn::make('mobile')
-                        ->searchable(),
-                ])->visibleFrom('md'),
+                Tables\Columns\ImageColumn::make('photo')
+                    ->circular(),
+                Tables\Columns\TextColumn::make('first_name')
+                    ->label(__('Name'))
+                    ->formatStateUsing(fn($record): string => "{$record->first_name} {$record->last_name}")
+                    ->sortable()
+                    ->searchable(['first_name', 'last_name']),
+                Tables\Columns\TextColumn::make('email')
+                    ->visibleFrom('md')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('phone')
+                    ->toggleable()
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('mobile')
+                    ->toggleable()
+                    ->searchable(),
 
-                Tables\Columns\Layout\Split::make([
-                    Tables\Columns\TextColumn::make('title')
-                        ->searchable(),
-                    Tables\Columns\TextColumn::make('company')
-                        ->searchable(),
-                    Tables\Columns\TextColumn::make('role')
-                        ->searchable(),
-                    Tables\Columns\TextColumn::make('company_website')
-                        ->toggleable()
-                        ->searchable(),
-                    Tables\Columns\TextColumn::make('business_type')
-                        ->toggleable()
-                        ->searchable(),
-                    Tables\Columns\TextColumn::make('company_size')
-                        ->searchable(),
-                    Tables\Columns\TextColumn::make('temperature')
-                        ->searchable(),
-                    Tables\Columns\IconColumn::make('active')
-                        ->boolean(),
-                ])->collapsible()->visibleFrom('lg'),
+                // Business Info
+                Tables\Columns\TextColumn::make('title')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('company')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('role')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('company_website')
+                    ->toggleable()
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('business_type')
+                    ->toggleable()
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('company_size')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('temperature')
+                    ->toggleable()
+                    ->searchable(),
+                Tables\Columns\IconColumn::make('active')
+                    ->boolean(),
+
+//                Tables\Columns\Layout\Split::make([])->visibleFrom('md'),
+//                Tables\Columns\Layout\Split::make([])->collapsible()->visibleFrom('lg'),
 
             ])
             ->filters([
-                //
+                Tables\Filters\Filter::make('active')
+                    ->query(fn(Builder $query) => $query->where('active', true))
+                    ->default(),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\ViewAction::make(),
+                Tables\Actions\DeleteAction::make()->requiresConfirmation(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ])
-            ->contentGrid([
-                'md' => 1,
-                'xl' => 2
-            ]);
+//            ->contentGrid([
+//                'md' => 1,
+//                'xl' => 2
+//            ])
+            ;
 
     }
 
