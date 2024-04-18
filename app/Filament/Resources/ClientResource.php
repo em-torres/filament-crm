@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\ClientResource\Pages;
 use App\Filament\Resources\ClientResource\RelationManagers;
 use App\Models\Client;
+use Carbon\Carbon;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Infolists\Components\Actions\Action;
@@ -86,7 +87,16 @@ class ClientResource extends Resource
                     Forms\Components\Section::make()->schema([
                         Forms\Components\Section::make(__('Personal Info'))->schema([
                             Forms\Components\FileUpload::make('photo')
-                                ->image(),
+                                ->image()
+                                ->maxSize('1024')
+                                ->getUploadedFileNameForStorageUsing(
+                                    function($file, $get): string {
+                                        return "{$get('first_name')}{$get('last_name')}"
+                                                    . Carbon::now()->format('Ymd')
+                                                    . "."
+                                                    . $file->getClientOriginalExtension();
+                                    }
+                                ),
                             Forms\Components\TextInput::make('first_name')
                                 ->string()
                                 ->minLength(2)
