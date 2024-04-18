@@ -49,8 +49,10 @@ class ClientResource extends Resource
                             Forms\Components\TextInput::make('linkedin')
                                 ->columnSpanFull(),
                             Forms\Components\Toggle::make('active')
-                                ->required(),
+                                ->required()
+                                ->visibleOn('edit'),
                         ]),
+
                         Forms\Components\Section::make(__('Business Info'))->schema([
                             Forms\Components\TextInput::make('title'),
                             Forms\Components\TextInput::make('company'),
@@ -71,7 +73,8 @@ class ClientResource extends Resource
                                     'warm' => __('warm'),
                                     'hot' => __('hot'),
                                 ]),
-                        ]),
+                        ])
+                            ->disabledOn('create'),
                     ])->columnSpan(2),
 
                     Forms\Components\Section::make(__('Notes'))->schema([
