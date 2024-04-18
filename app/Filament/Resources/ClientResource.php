@@ -159,42 +159,44 @@ class ClientResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('first_name')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('last_name')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('email')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('phone')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('mobile')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('title')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('company')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('role')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('company_website')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('business_type')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('company_size')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('temperature')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('photo')
-                    ->searchable(),
-                Tables\Columns\IconColumn::make('active')
-                    ->boolean(),
-                Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\Layout\Split::make([
+                    Tables\Columns\ImageColumn::make('photo')
+                        ->circular(),
+                    Tables\Columns\TextColumn::make('first_name')
+                        ->label(__('Name'))
+                        ->formatStateUsing(fn($record): string => "{$record->first_name} {$record->last_name}")
+                        ->searchable(['first_name', 'last_name']),
+                    Tables\Columns\TextColumn::make('email')
+                        ->visibleFrom('md')
+                        ->searchable(),
+                    Tables\Columns\TextColumn::make('phone')
+                        ->toggleable()
+                        ->searchable(),
+                    Tables\Columns\TextColumn::make('mobile')
+                        ->searchable(),
+                ])->visibleFrom('md'),
+
+                Tables\Columns\Layout\Split::make([
+                    Tables\Columns\TextColumn::make('title')
+                        ->searchable(),
+                    Tables\Columns\TextColumn::make('company')
+                        ->searchable(),
+                    Tables\Columns\TextColumn::make('role')
+                        ->searchable(),
+                    Tables\Columns\TextColumn::make('company_website')
+                        ->toggleable()
+                        ->searchable(),
+                    Tables\Columns\TextColumn::make('business_type')
+                        ->toggleable()
+                        ->searchable(),
+                    Tables\Columns\TextColumn::make('company_size')
+                        ->searchable(),
+                    Tables\Columns\TextColumn::make('temperature')
+                        ->searchable(),
+                    Tables\Columns\IconColumn::make('active')
+                        ->boolean(),
+                ])->collapsible()->visibleFrom('lg'),
+
             ])
             ->filters([
                 //
@@ -207,7 +209,12 @@ class ClientResource extends Resource
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
+            ])
+            ->contentGrid([
+                'md' => 1,
+                'xl' => 2
             ]);
+
     }
 
     public static function getRelations(): array
