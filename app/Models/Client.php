@@ -29,4 +29,9 @@ class Client extends Model
         'notes',
         'referrals',
     ];
+
+    public function getFullNameAttribute()
+    {
+        return "{$this->first_name} {$this->last_name} - {$this->company}";
+    }
 }
